@@ -1,7 +1,6 @@
 package com.example.appcalculadoraintereses.components
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,7 @@ fun SpaceW(size: Dp = 5.dp){
 fun MainTextField(value: String, onValueChange: (String) -> Unit, label: String){
     //Campo de texto de material Desing el cual es transparente
     //Tiene menor énfasis que un campo relleno
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(text = label)},
@@ -100,7 +99,7 @@ fun Alert(
         text = {Text(text = message)},
         //Componente que representa la confirmación sobre el dialogo mostrado
         confirmButton = {
-            Button(onClick = {onConfirmClick()}) {
+            Button(onClick = { onConfirmClick()}) {
                 Text(text = confirmText)
             }
         }

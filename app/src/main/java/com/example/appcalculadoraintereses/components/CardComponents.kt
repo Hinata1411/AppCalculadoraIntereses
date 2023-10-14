@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,7 +42,7 @@ fun InfoCard(title: String, info: Double, modifier: Modifier = Modifier){
 //Función para mostrar información utilizando las tarjetas
 @Composable
 fun ShowInfoCard(titleInteres: String, montoIntereses: Double, titleMonto: String, monto: Double){
-    Row (modifier = Modifier.fillMaxSize(),
+    Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
         //Utilizamos la función creada, enviando los parámetros para mostrar la información
