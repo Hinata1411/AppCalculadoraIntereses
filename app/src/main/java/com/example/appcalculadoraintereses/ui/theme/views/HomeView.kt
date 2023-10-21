@@ -24,12 +24,13 @@ import com.example.appcalculadoraintereses.components.MainButton
 import com.example.appcalculadoraintereses.components.MainTextField
 import com.example.appcalculadoraintereses.components.ShowInfoCard
 import com.example.appcalculadoraintereses.components.SpaceH
+import com.example.appcalculadoraintereses.viewmodels.PrestamoViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 
 @Composable
-fun ContentHomeView(paddingValues: PaddingValues){
+fun ContentHomeView(paddingValues: PaddingValues, viewModel: PrestamoViewModel){
     Column (
         modifier = Modifier
             .padding(paddingValues)
@@ -95,9 +96,55 @@ fun ContentHomeView(paddingValues: PaddingValues){
                 onConfirmClick = { showAlert = false }) {}
         }
     }
-}
-//Función para calcular el total
 
+    //Obtenemos el estado del modelo que declaramos en el viewModel
+    val state = viewModel.state
+    //Invocamos la función para incluir las card con la información
+    ShowInfoCard(
+        titleInteres = "Total: " ,
+        //La información a mostrar en los card está contenida en el model
+        montoIntereses = state.montoIntereses,
+        titleMonto = "Cuota: ",
+        monto = state.montoCuota
+    )
+    MainTextField(value = state.montoPrestamo,
+        //Invocamos la función onValue declara en el viewModel
+        onValueChange = {viewModel.onValue(value = it, campo = "montoPrestamo")}, label = "Prestamo")
+    SpaceH()
+    MainTextField(value = state.cantCuotas,
+        onValueChange = {viewModel.onValue(value = it, campo = "cuotas")} , label = "Cuotas")
+    SpaceH(10.dp)
+    MainTextField(value = state.tasa,
+        onValueChange = {viewModel.onValue(value = it, campo = "tasa")}, label = "Tasa")
+    SpaceH(10.dp)
+
+    //Creamos un boton para analizar los cálculos
+    MainButton(text = "Calular") {
+        //Invocamos la función calcular definida en el viewmodel
+        viewModel.calcular()
+    }
+
+    SpaceH()
+
+    //Agregamos un campo para limpiar los campos
+    MainButton(text = "Limpiar", color = Color.Red) {
+        //Se invoca la función declarada en la viewmodel
+        viewModel.limpiar()
+    }
+
+    //Mostramos el mensaje de alerta si la bandera es verdadera
+    //Tomamos el valor del model a través del viewmodel
+    if (viewModel.state.showAlert){
+        Alert(
+            title = "Alerta",
+            message = "Ingresa los datos",
+            confirmText = "Aceptar",
+            //Al hacer click en aceptar, invoca la función del viewModel
+            onConfirmClick = { viewModel.confirmDiaglog() }) { }
+    }
+}
+
+//Función para calcular el total
 fun calcularTotal(montoPrestamo: Double, cantCuotas: Int, tasaInteresAnual: Double): Double {
     val res = cantCuotas * calcularCuota(montoPrestamo, cantCuotas, tasaInteresAnual)
     return BigDecimal(res).setScale(2, RoundingMode.HALF_UP).toDouble()
@@ -117,10 +164,10 @@ fun calcularCuota(montoPrestamo: Double, cantCuotas: Int, tasaInteresAnual: Doub
     return cuotaRedondeada
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(){
+fun HomeView(viewModel: PrestamoViewModel){
+    //Agregamos el viewModel al constructor de la vista
     Scaffold (topBar = {
         CenterAlignedTopAppBar(
             //Ponemos un título a nuestra topBar
@@ -130,6 +177,9 @@ fun HomeView(){
             )
         )
     }){
-        ContentHomeView(it)
+        //Enviamos el viewModel a la función de contenido para que
+        //pueda utlizar la lógica del viewModel
+        ContentHomeView(it, viewModel)
     }
 }
+

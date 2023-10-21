@@ -7,5 +7,4 @@ data class PrestamoState(
     val montoIntereses: Double = 0.0,
     val montoCuota: Double = 0.0,
     var showAlert: Boolean = false
-
 )
